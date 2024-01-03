@@ -6,6 +6,13 @@ public class Fractal : MonoBehaviour{
     int depth = 4;
 
     void Start(){
-        Instantiate(this);
+        name = "Fractal " + depth;
+        
+        if(depth <= 1){
+            return;
+        }
+
+        Fractal child = Instantiate(this);
+        child.depth = depth - 1;
     }
 }
