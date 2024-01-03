@@ -33,4 +33,8 @@ public class Fractal : MonoBehaviour{
         child.transform.localScale = 0.5f * Vector3.one;
         return child;
     }
+
+    void Update(){
+        transform.Rotate(0f, 22.5f * Time.deltaTime, 0f);
+    }
 }
