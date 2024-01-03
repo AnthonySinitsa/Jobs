@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class Fractal : MonoBehavior{
+public class Fractal : MonoBehaviour{
+
     [SerializeField, Range(1, 8)]
     int depth = 4;
 }
