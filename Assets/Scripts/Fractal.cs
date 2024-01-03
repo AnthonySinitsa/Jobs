@@ -15,5 +15,6 @@ public class Fractal : MonoBehaviour{
         Fractal child = Instantiate(this);
         child.depth = depth - 1;
         child.transform.SetParent(transform, false);
+        child.transform.localPosition = Vector3.right;
     }
 }
