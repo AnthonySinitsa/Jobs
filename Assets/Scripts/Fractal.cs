@@ -6,8 +6,8 @@ public class Fractal : MonoBehaviour{
         public Vector3 direction;
         public Quaternion rotation;
         public Transform transform;
-        FractalPart[][] parts;
     }
+    FractalPart[][] parts;
 
     [SerializeField, Range(1, 8)]
     int depth = 4;
@@ -43,7 +43,7 @@ public class Fractal : MonoBehaviour{
 
         CreatePart(0, 0);
         for(int li = 1; li < parts.Length; li++){
-            FractalPart[] levelParts = levelParts[li];
+            FractalPart[] levelParts = parts[li];
             for(int fpi = 0; fpi < levelParts.Length; fpi++){
                 for(int ci = 0; ci < 5; ci++){
                     CreatePart(li, ci);
