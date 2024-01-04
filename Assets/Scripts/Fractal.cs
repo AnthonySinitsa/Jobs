@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class Fractal : MonoBehaviour{
 
+    struct FractalPart{
+        public Vector3 direction;
+        public Quaternion rotation;
+    }
+
     [SerializeField, Range(1, 8)]
     int depth = 4;
 
