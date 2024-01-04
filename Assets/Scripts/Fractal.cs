@@ -5,6 +5,8 @@ public class Fractal : MonoBehaviour{
     struct FractalPart{
         public Vector3 direction;
         public Quaternion rotation;
+        public Transform transform;
+        FractalPart[][] parts;
     }
 
     [SerializeField, Range(1, 8)]
@@ -34,6 +36,11 @@ public class Fractal : MonoBehaviour{
     }
 
     void Awake(){
+        parts = new FractalPart[depth][];
+        for(int i = 0, length = 1; i < parts.Length; i++, length *= 5){
+            parts[i] = new FractalPart[length];
+        }
+
         CreatePart();
     }
 }
