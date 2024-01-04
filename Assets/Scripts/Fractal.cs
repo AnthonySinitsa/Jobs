@@ -28,12 +28,18 @@ public class Fractal : MonoBehaviour{
         Quaternion.Euler(90f, 0f, 0f), Quaternion.Euler(-90f, 0f, 0f)
     };
 
-    void CreatePart(int levelIndex, int childIndex, float scale){
+    FractalPart CreatePart(int levelIndex, int childIndex, float scale){
         var go = new GameObject("Fractal Part L" + levelIndex + " C" + childIndex);
         go.transform.localScale = scale * Vector3.one;
         go.transform.SetParent(transform, false);
         go.AddComponent<MeshFilter>().mesh = mesh;
         go.AddComponent<MeshRenderer>().material = material;
+
+        return new FractalPart{
+            direction = directions[childIndex],
+            rotation = rotations[childIndex],
+            transform = go.transform
+        };
     }
 
     void Awake(){
