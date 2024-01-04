@@ -63,9 +63,14 @@ public class Fractal : MonoBehaviour{
 
     void Update(){
         for(int li = 1; li < parts.Length; li++){
+            FractalPart[] parentParts = parts[li - 1];
             FractalPart[] levelParts = parts[li];
             for(int fpi = 0; fpi < levelParts.Length; fpi++){
+                Transform parentTransform = parentParts[fpi / 5].transform;
                 FractalPart part = levelParts[fpi];
+                part.transform.localPosition =
+                    parentTransform.localPosition +
+                    part.transform.localScale.x * part.direction;
             }
         }
     }
