@@ -28,8 +28,8 @@ public class Fractal : MonoBehaviour{
         Quaternion.Euler(90f, 0f, 0f), Quaternion.Euler(-90f, 0f, 0f)
     };
 
-    void CreatePart(){
-        var go = new GameObject("Fractal Part");
+    void CreatePart(int levelIndex, int childIndex){
+        var go = new GameObject("Fractal Part L" + levelIndex + " C" + childIndex);
         go.transform.SetParent(transform, false);
         go.AddComponent<MeshFilter>().mesh = mesh;
         go.AddComponent<MeshRenderer>().material = material;
@@ -41,6 +41,14 @@ public class Fractal : MonoBehaviour{
             parts[i] = new FractalPart[length];
         }
 
-        CreatePart();
+        CreatePart(0, 0);
+        for(int li = 1; li < parts.Length; li++){
+            FractalPart[] levelParts = levelParts[li];
+            for(int fpi = 0; fpi < levelParts.Length; fpi++){
+                for(int ci = 0; ci < 5; ci++){
+                    CreatePart(li, ci);
+                }
+            }
+        }
     }
 }
