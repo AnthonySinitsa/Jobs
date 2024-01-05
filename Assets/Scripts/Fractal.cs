@@ -8,6 +8,8 @@ public class Fractal : MonoBehaviour{
     }
     FractalPart[][] parts;
 
+    Matrix4x4[][] matrices;
+
     [SerializeField, Range(1, 8)]
     int depth = 4;
 
@@ -34,8 +36,10 @@ public class Fractal : MonoBehaviour{
 
     void Awake(){
         parts = new FractalPart[depth][];
+        matrices = new Matrix4x4[depth][];
         for(int i = 0, length = 1; i < parts.Length; i++, length *= 5){
             parts[i] = new FractalPart[length];
+            matrices[i] = new Matrix4x4[length];
         }
 
         parts[0][0] = CreatePart(0);
