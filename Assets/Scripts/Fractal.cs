@@ -72,8 +72,10 @@ public class Fractal : MonoBehaviour{
     }
 
     void OnValidate(){
-        OnDisable();
-        OnEnable();
+        if(parts != null && enabled){
+            OnDisable();
+            OnEnable();
+        }
     }
 
     void Update(){
@@ -107,6 +109,9 @@ public class Fractal : MonoBehaviour{
                     part.worldPosition, part.worldRotation, scale * Vector3.one
                 );
             }
+        }
+        for(int i = 0; i < matricesBuffers.Length; i++){
+            matricesBuffersp[i].SetData(matrices[i]);
         }
     }
 }
