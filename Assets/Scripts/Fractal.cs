@@ -65,7 +65,7 @@ public class Fractal : MonoBehaviour{
                 }
             }
         }
-            propertyBlock ??= new MaterialPropertyBlock();
+        propertyBlock ??= new MaterialPropertyBlock();
     }
 
     void OnDisable(){
@@ -120,8 +120,10 @@ public class Fractal : MonoBehaviour{
         for(int i = 0; i < matricesBuffers.Length; i++){
             ComputeBuffer buffer = matricesBuffers[i];
             buffer.SetData(matrices[i]);
-            material.SetBuffer(matricesId, buffer);
-            Graphics.DrawMeshInstancedProcedural(mesh, 0, material, bounds, buffer.count);
+            propertyBlock.SetBuffer(matricesId, buffer);
+            Graphics.DrawMeshInstancedProcedural(
+                mesh, 0, material, bounds, buffer.count, propertyBlock
+            );
         }
     }
 }
