@@ -7,6 +7,9 @@ public class Fractal : MonoBehaviour{
         public Quaternion rotation, worldRotation;
         public float spinAngle;
     }
+
+    static readonly int matricesId = Shader.PropertyToID("_Matrices");
+
     FractalPart[][] parts;
 
     Matrix4x4[][] matrices;
@@ -110,8 +113,12 @@ public class Fractal : MonoBehaviour{
                 );
             }
         }
+        var bounds = new Bounds(Vector3.zero, 3f * Vector3.one);
         for(int i = 0; i < matricesBuffers.Length; i++){
-            matricesBuffers[i].SetData(matrices[i]);
+            ComputeBuffer buffer = matricesBuffers[i];
+            buffer.SetData(matrices[i]);
+            material.SetBuffer(matricesId, buffer);
+            Graphics.DrawMeshInstancedProcedural(mesh, 0, material, bounds, buffer.count);
         }
     }
 }
