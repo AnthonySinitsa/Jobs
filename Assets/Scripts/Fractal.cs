@@ -62,12 +62,16 @@ public class Fractal : MonoBehaviour{
         FractalPart rootPart = parts[0][0];
         rootPart.rotation *= deltaRotation;
         rootPart.worldRotation = rootPart.rotation;
-        parts [0][0] = rootPart;
+        parts[0][0] = rootPart;
+        matrices[0][0] = Matrix4x4.TRS(
+            rootPart.worldPosition, rootPart.worldRotation, Vector3.one
+        );
         float scale = 1f;
         for(int li = 1; li < parts.Length; li++){
             scale *= 0.5f;
             FractalPart[] parentParts = parts[li - 1];
             FractalPart[] levelParts = parts[li];
+            Matrix4x4[] levelMatrices = matrices[li];
             for(int fpi = 0; fpi < levelParts.Length; fpi++){
                 FractalPart parent = parentParts[fpi / 5];
                 FractalPart part = levelParts[fpi];
@@ -77,6 +81,9 @@ public class Fractal : MonoBehaviour{
                     parent.worldPosition +
                     parent.worldRotation * (1.5f * scale * part.direction);
                 levelParts[fpi] = part;
+                levelMatrices[fpi] = Matrix4x4.TRS(
+                    part.worldPosition, part.worldRotation, scale * Vector3.one
+                );
             }
         }
     }
