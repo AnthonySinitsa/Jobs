@@ -111,7 +111,7 @@ public class Fractal : MonoBehaviour{
             }
         }
         for(int i = 0; i < matricesBuffers.Length; i++){
-            matricesBuffersp[i].SetData(matrices[i]);
+            matricesBuffers[i].SetData(matrices[i]);
         }
     }
 }
