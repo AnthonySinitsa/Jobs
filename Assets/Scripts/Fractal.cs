@@ -10,6 +10,8 @@ public class Fractal : MonoBehaviour{
 
     static readonly int matricesId = Shader.PropertyToID("_Matrices");
 
+    static MaterialPropertyBlock propertyBlock;
+
     FractalPart[][] parts;
 
     Matrix4x4[][] matrices;
@@ -63,6 +65,7 @@ public class Fractal : MonoBehaviour{
                 }
             }
         }
+            propertyBlock ??= new MaterialPropertyBlock();
     }
 
     void OnDisable(){
