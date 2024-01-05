@@ -37,7 +37,7 @@ public class Fractal : MonoBehaviour{
 
     ComputeBuffer[] matricesBuffers;
 
-    void Awake(){
+    void OnEnable(){
         parts = new FractalPart[depth][];
         matrices = new Matrix4x4[depth][];
         matricesBuffers = new ComputeBuffer[depth];
@@ -62,6 +62,11 @@ public class Fractal : MonoBehaviour{
         }
     }
 
+    void OnDisable(){
+        for(int i = 0; i < matricesBuffers.Length; i++){
+            matricesBuffers[i].Release();
+        }
+    }
     void Update(){
         float spinAngleDelta = 22.5f * Time.deltaTime;
         FractalPart rootPart = parts[0][0];
