@@ -66,7 +66,16 @@ public class Fractal : MonoBehaviour{
         for(int i = 0; i < matricesBuffers.Length; i++){
             matricesBuffers[i].Release();
         }
+        parts = null;
+        matrices = null;
+        matricesBuffers = null;
     }
+
+    void OnValidate(){
+        OnDisable();
+        OnEnable();
+    }
+
     void Update(){
         float spinAngleDelta = 22.5f * Time.deltaTime;
         FractalPart rootPart = parts[0][0];
