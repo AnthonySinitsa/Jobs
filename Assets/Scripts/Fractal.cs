@@ -89,7 +89,9 @@ public class Fractal : MonoBehaviour{
         FractalPart rootPart = parts[0][0];
         rootPart.spinAngle += spinAngleDelta;
         rootPart.worldRotation = 
-            rootPart.rotation * Quaternion.Euler(0f, rootPart.spinAngle, 0f);
+            transform.rotation * 
+            (rootPart.rotation * Quaternion.Euler(0f, rootPart.spinAngle, 0f));
+        rootPart.worldPosition = transform.position;
         parts[0][0] = rootPart;
         matrices[0][0] = Matrix4x4.TRS(
             rootPart.worldPosition, rootPart.worldRotation, Vector3.one
