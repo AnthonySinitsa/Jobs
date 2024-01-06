@@ -88,15 +88,14 @@ public class Fractal : MonoBehaviour{
         }
 
         parts[0][0] = CreatePart(0);
-        for(int li = 1; li < parts.Length; li++){
-            NativeArray<FractalPart> levelParts = parts[li];
-            int childIndex = 0; // Index for children in the current level
-            for(int fpi = 0; fpi < parentParts.Length; fpi++){
-                for(int ci = 0; ci < directions.Length; ci++){
-                    levelParts[childIndex] = CreatePart(ci);
-                }
-            }
-        }
+        for (int li = 1; li < parts.Length; li++) {
+			NativeArray<FractalPart> levelParts = parts[li];
+			for (int fpi = 0; fpi < levelParts.Length; fpi += 5) {
+				for (int ci = 0; ci < 5; ci++) {
+					levelParts[fpi + ci] = CreatePart(ci);
+				}
+			}
+		}
         propertyBlock ??= new MaterialPropertyBlock();
     }
 
