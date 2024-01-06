@@ -4,7 +4,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
-using state Unity.Mathematics.math;
+using static Unity.Mathematics.math;
 using quaternion = Unity.Mathematics.quaternion;
 
 public class Fractal : MonoBehaviour{
