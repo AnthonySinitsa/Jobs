@@ -88,13 +88,11 @@ public class Fractal : MonoBehaviour{
 
         parts[0][0] = CreatePart(0);
         for(int li = 1; li < parts.Length; li++){
-            FractalPart[] parentParts = parts[li - 1];
             NativeArray<FractalPart> levelParts = parts[li];
             int childIndex = 0; // Index for children in the current level
             for(int fpi = 0; fpi < parentParts.Length; fpi++){
                 for(int ci = 0; ci < directions.Length; ci++){
                     levelParts[childIndex] = CreatePart(ci);
-                    childIndex++;
                 }
             }
         }
@@ -133,17 +131,18 @@ public class Fractal : MonoBehaviour{
             rootPart.worldPosition, rootPart.worldRotation, objectScale * Vector3.one
         );
         float scale = objectScale;
+        JobHandle jobHandle = default;
         for(int li = 1; li < parts.Length; li++){
             scale *= 0.5f;
-            var job = new UpdateFractalLevelJob{
+            jobHandle = new UpdateFractalLevelJob{
                 spinAngleDelta = spinAngleDelta,
                 scale = scale,
                 parents = parts[li - 1],
                 parts = parts[li],
                 matrices = matrices[li]
-            };
-            job.Schedulte(parts[li].Length, default).Complete();
+            }.Schedule(parts[li].Length, jobHandle);
         }
+        jobHandle.Complete();
         var bounds = new Bounds(rootPart.worldPosition, 3f * objectScale * Vector3.one);
         for(int i = 0; i < matricesBuffers.Length; i++){
             ComputeBuffer buffer = matricesBuffers[i];
