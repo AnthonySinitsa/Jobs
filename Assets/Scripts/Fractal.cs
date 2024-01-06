@@ -142,7 +142,7 @@ public class Fractal : MonoBehaviour{
                 parents = parts[li - 1],
                 parts = parts[li],
                 matrices = matrices[li]
-            }.Schedule(parts[li].Length, jobHandle);
+            }.ScheduleParallel(parts[li].Length, 5, jobHandle);
         }
         jobHandle.Complete();
         var bounds = new Bounds(rootPart.worldPosition, 3f * objectScale * Vector3.one);
