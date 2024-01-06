@@ -1,7 +1,12 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
+
+using state Unity.Mathematics.math;
+using float4x4 = Unity.Mathematics.float4x4;
+using quaternion = Unity.Mathematics.quaternion;
 
 public class Fractal : MonoBehaviour{
 
@@ -16,7 +21,7 @@ public class Fractal : MonoBehaviour{
         public NativeArray<FractalPart> parts;
 
         [WriteOnly]
-        public NativeArray<Matrix4x4> matrices;
+        public NativeArray<float4x4> matrices;
 
         public void Execute(int i){
             FractalPart parent = parents[i / 5];
@@ -24,21 +29,21 @@ public class Fractal : MonoBehaviour{
 			part.spinAngle += spinAngleDelta;
 			part.worldRotation =
 				parent.worldRotation *
-				(part.rotation * Quaternion.Euler(0f, part.spinAngle, 0f));
+				(part.rotation * quaternion.Euler(0f, part.spinAngle, 0f));
 			part.worldPosition =
 				parent.worldPosition +
 				parent.worldRotation * (1.5f * scale * part.direction);
 			parts[i] = part;
 
-			matrices[i] = Matrix4x4.TRS(
-				part.worldPosition, part.worldRotation, scale * Vector3.one
+			matrices[i] = float4x4.TRS(
+				part.worldPosition, part.worldRotation, scale * float3.one
 			);
         }
     }
 
     struct FractalPart{
-        public Vector3 direction, worldPosition;
-        public Quaternion rotation, worldRotation;
+        public float3 direction, worldPosition;
+        public quaternion rotation, worldRotation;
         public float spinAngle;
     }
 
@@ -48,7 +53,7 @@ public class Fractal : MonoBehaviour{
 
     NativeArray<FractalPart>[] parts;
 
-    NativeArray<Matrix4x4>[] matrices;
+    NativeArray<float4x4>[] matrices;
 
     [SerializeField, Range(1, 8)]
     int depth = 4;
@@ -59,14 +64,14 @@ public class Fractal : MonoBehaviour{
     [SerializeField]
     Material material;
 
-    static Vector3[] directions = {
-        Vector3.up, Vector3.right, Vector3.left, Vector3.forward, Vector3.back
+    static float3[] directions = {
+        float3.up, float3.right, float3.left, float3.forward, float3.back
     };
 
-    static Quaternion[] rotations = {
-        Quaternion.identity,
-        Quaternion.Euler(0f, 0f, -90f), Quaternion.Euler(0f, 0f, 90f),
-        Quaternion.Euler(90f, 0f, 0f), Quaternion.Euler(-90f, 0f, 0f)
+    static quaternion[] rotations = {
+        quaternion.identity,
+        quaternion.Euler(0f, 0f, -90f), quaternion.Euler(0f, 0f, 90f),
+        quaternion.Euler(90f, 0f, 0f), quaternion.Euler(-90f, 0f, 0f)
     };
 
     FractalPart CreatePart(int childIndex) => new FractalPart{
@@ -78,12 +83,12 @@ public class Fractal : MonoBehaviour{
 
     void OnEnable(){
         parts = new NativeArray<FractalPart>[depth];
-        matrices = new NativeArray<Matrix4x4>[depth];
+        matrices = new NativeArray<float4x4>[depth];
         matricesBuffers = new ComputeBuffer[depth];
         int stride = 16 * 4;
         for(int i = 0, length = 1; i < parts.Length; i++, length *= 5){
             parts[i] = new NativeArray<FractalPart>(length, Allocator.Persistent);
-            matrices[i] = new NativeArray<Matrix4x4>(length, Allocator.Persistent);
+            matrices[i] = new NativeArray<float4x4>(length, Allocator.Persistent);
             matricesBuffers[i] = new ComputeBuffer(length, stride);
         }
 
@@ -123,12 +128,12 @@ public class Fractal : MonoBehaviour{
         rootPart.spinAngle += spinAngleDelta;
         rootPart.worldRotation = 
             transform.rotation * 
-            (rootPart.rotation * Quaternion.Euler(0f, rootPart.spinAngle, 0f));
+            (rootPart.rotation * quaternion.Euler(0f, rootPart.spinAngle, 0f));
         rootPart.worldPosition = transform.position;
         parts[0][0] = rootPart;
         float objectScale = transform.lossyScale.x;
-        matrices[0][0] = Matrix4x4.TRS(
-            rootPart.worldPosition, rootPart.worldRotation, objectScale * Vector3.one
+        matrices[0][0] = float4x4.TRS(
+            rootPart.worldPosition, rootPart.worldRotation, objectScale * float3.one
         );
         float scale = objectScale;
         JobHandle jobHandle = default;
