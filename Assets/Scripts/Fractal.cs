@@ -10,7 +10,8 @@ public class Fractal : MonoBehaviour{
 
     static readonly int
 		baseColorId = Shader.PropertyToID("_BaseColor"), 
-		matricesId = Shader.PropertyToID("_Matrices");
+		matricesId = Shader.PropertyToID("_Matrices"),
+        sequenceNumbersId = Shader.PropertyToID("_SequenceNumbers");
 
     static MaterialPropertyBlock propertyBlock;
 
@@ -47,15 +48,19 @@ public class Fractal : MonoBehaviour{
 
     ComputeBuffer[] matricesBuffers;
 
+    Vector4[] sequenceNumbers;
+
     void OnEnable(){
         parts = new FractalPart[depth][];
         matrices = new Matrix4x4[depth][];
         matricesBuffers = new ComputeBuffer[depth];
+        sequenceNumbers = new Vector4[depth];
         int stride = 16 * 4;
         for(int i = 0, length = 1; i < parts.Length; i++, length *= 5){
             parts[i] = new FractalPart[length];
             matrices[i] = new Matrix4x4[length];
             matricesBuffers[i] = new ComputeBuffer(length, stride);
+            sequenceNumbers[i] = new Vector4(0.381f, 0f);
         }
 
         parts[0][0] = CreatePart(0);
@@ -80,6 +85,7 @@ public class Fractal : MonoBehaviour{
         parts = null;
         matrices = null;
         matricesBuffers = null;
+        sequenceNumbers = null;
     }
 
     void OnValidate(){
@@ -132,6 +138,7 @@ public class Fractal : MonoBehaviour{
 				baseColorId, gradient.Evaluate(i / (matricesBuffers.Length - 1f))
 			);
             propertyBlock.SetBuffer(matricesId, buffer);
+            propertyBlock.SetVector(sequenceNumbersId,sequenceNumbers[i]);
             Graphics.DrawMeshInstancedProcedural(
                 mesh, 0, material, bounds, buffer.count, propertyBlock
             );
