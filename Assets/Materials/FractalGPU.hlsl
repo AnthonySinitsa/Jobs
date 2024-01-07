@@ -11,7 +11,11 @@ void ConfigureProcedural () {
 float4 _BaseColor;
 
 float4 GetFractalColor(){
-	return _BaseColor;
+	#if defined(UNITY_PROCEDURAL_INSTANCING_ENABLED)
+		return (unity_InstanceID % 10.0) * 9.0;
+	#else
+		return _BaseColor;
+	#endif
 }
 
 void ShaderGraphFunction_float (float3 In, out float3 Out, out float4 FractalColor) {
